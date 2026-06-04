@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake Configure (Debug)",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["-B", "build", "-DCMAKE_BUILD_TYPE=Debug"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Backend (Debug)",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--build", "build", "--config", "Debug"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": ["CMake Configure (Debug)"],
+      "dependsOrder": "sequence",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": ["$msCompile"]
+    }
+  ]
+}

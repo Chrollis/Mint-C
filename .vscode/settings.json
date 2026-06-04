@@ -1,0 +1,17 @@
+{
+  "C_Cpp.default.cppStandard": "c++23",
+  "C_Cpp.default.cStandard": "c23",
+  "editor.formatOnSave": true,
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/build": true,
+    "**/node_modules": true,
+    "**/.git": true
+  },
+  "git.ignoreLimitWarning": true,
+  "search.exclude": {
+    "**/build": true,
+    "**/node_modules": true
+  }
+}

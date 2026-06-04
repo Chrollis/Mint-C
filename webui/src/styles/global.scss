@@ -1,0 +1,193 @@
+/*
+ * Mint-C - Web-based digit recognition tool with C++ CNN backend
+ * Copyright (C) 2026 Chrollis
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+body {
+  font-family: "LXGW WenKai Screen", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.v-app-bar-title {
+  font-family: "Poppins", "LXGW WenKai Screen", sans-serif;
+  font-weight: 600;
+}
+
+code,
+pre {
+  font-family: "LXGW WenKai Mono Screen", monospace;
+}
+
+.v-btn {
+  font-family: "LXGW WenKai Screen", sans-serif;
+  text-transform: none !important;
+}
+
+.v-card,
+.v-btn,
+.v-text-field .v-field,
+.v-select .v-field,
+.v-file-input .v-field {
+  border-radius: 12px;
+}
+
+.frosted-glass {
+  background-color: #ffffff5b !important;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.frosted-glass:hover {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04) !important;
+}
+
+.v-btn {
+  transition: all 0.2s ease;
+}
+
+.v-btn--variant-primary {
+  background-color: rgb(var(--v-theme-primary));
+}
+
+.v-btn--variant-text:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
+  color: rgb(var(--v-theme-primary));
+}
+
+.v-list-item {
+  transition: all 0.2s ease;
+}
+
+.v-list-item:hover {
+  backdrop-filter: blur(8px);
+  transform: translateX(4px);
+}
+
+@keyframes cardFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.v-card {
+  animation: cardFadeInUp 0.3s ease-out;
+}
+
+* {
+  cursor: none !important;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--v-theme-bg0)) 0%,
+    rgb(var(--v-theme-bg1)) 25%,
+    rgb(var(--v-theme-bg2)) 50%,
+    rgb(var(--v-theme-bg3)) 75%,
+    rgb(var(--v-theme-bg4)) 100%
+  );
+}
+
+.v-application,
+.v-app,
+.v-main,
+.v-container {
+  background-color: transparent !important;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    background-color: rgba(var(--v-theme-primary), 0.15);
+  }
+  50% {
+    opacity: 1;
+    background-color: rgba(var(--v-theme-primary), 0.3);
+  }
+  100% {
+    opacity: 0.7;
+    background-color: rgba(var(--v-theme-primary), 0.15);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--v-theme-primary), 0.4);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--v-theme-primary), 0.6);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--v-theme-primary), 0.4) rgba(0, 0, 0, 0.05);
+}
+
+.transparent {
+  background: transparent !important;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dialog-card {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}

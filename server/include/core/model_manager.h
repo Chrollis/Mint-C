@@ -1,0 +1,63 @@
+// Mint-C - Web-based digit recognition tool with C++ CNN backend
+// Copyright (C) 2026 Chrollis
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#pragma once
+
+#include <mint.h>
+#include <atomic>
+#include <cstdint>
+#include <filesystem>
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <shared_mutex>
+#include <utility>
+#include <vector>
+
+namespace server {
+
+class model_manager {
+public:
+    static model_manager& instance();
+
+    model_manager(const model_manager&) = delete;
+    model_manager& operator=(const model_manager&) = delete;
+    model_manager(model_manager&&) = default;
+    model_manager& operator=(model_manager&&) = default;
+
+    bool load_from_bin(const std::filesystem::path& path);
+
+    bool save_to_bin(const std::filesystem::path& path) const;
+
+    bool init_from_json(const nlohmann::json& config);
+
+    nlohmann::json export_to_json() const;
+
+    std::vector<std::pair<uint8_t, double>> predict(
+        const std::vector<std::vector<Eigen::MatrixXd>>& input);
+
+    std::unique_ptr<mint::model> clone_model() const;
+
+    bool is_ready() const { return model_ready_; }
+
+private:
+    model_manager() = default;
+
+    mutable std::shared_mutex mutex_;
+    mint::model model_;
+    std::atomic<bool> model_ready_ = false;
+};
+
+}  //  namespace server

@@ -1,0 +1,41 @@
+// Mint-C - Web-based digit recognition tool with C++ CNN backend
+// Copyright (C) 2026 Chrollis
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import { ref } from "vue";
+
+export function useAsyncOperation(asyncFn, options = { throwOnError: false }) {
+  const loading = ref(false);
+
+  const error = ref(null);
+
+  const execute = async (...args) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const result = await asyncFn(...args);
+      return result;
+    } catch (err) {
+      error.value = err;
+      console.error(`Async operation failed:`, err);
+      if (options.throwOnError) throw err;
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return { execute, loading, error };
+}
