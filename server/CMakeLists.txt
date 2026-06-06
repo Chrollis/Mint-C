@@ -21,10 +21,29 @@ file(GLOB_RECURSE SERVER_SOURCES "src/*.cpp")
 
 add_executable(mint-server ${SERVER_SOURCES} app_icon.rc)
 
+if(WIN32)
+    if(MSVC)
+        target_link_options(mint-server PRIVATE 
+            /SUBSYSTEM:WINDOWS 
+            /ENTRY:mainCRTStartup
+        )
+    elseif(MINGW)
+        target_link_options(mint-server PRIVATE -mwindows)
+    endif()
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK REQUIRED gtk+-3.0 gdk-pixbuf-2.0)
+    target_link_libraries(mint-server PRIVATE ${GTK_LIBRARIES})
+    target_include_directories(mint-server PRIVATE ${GTK_INCLUDE_DIRS})
+endif()
+
 target_link_libraries(mint-server
     PRIVATE
         mint-lib                      
-        httplib::httplib          
+        httplib::httplib
+        webview::core          
         OpenMP::OpenMP_CXX        
 )
 
@@ -40,11 +59,19 @@ add_custom_command(TARGET mint-server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
         ${CMAKE_CURRENT_SOURCE_DIR}/web 
         $<TARGET_FILE_DIR:mint-server>/web
+
     COMMAND ${CMAKE_COMMAND} -E remove_directory 
         $<TARGET_FILE_DIR:mint-server>/dataset
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
         ${CMAKE_CURRENT_SOURCE_DIR}/dataset 
         $<TARGET_FILE_DIR:mint-server>/dataset
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        ${CMAKE_CURRENT_SOURCE_DIR}/chrollapp.ico 
+        $<TARGET_FILE_DIR:mint-server>/chrollapp.ico
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        ${CMAKE_CURRENT_SOURCE_DIR}/chrollapp.png 
+        $<TARGET_FILE_DIR:mint-server>/chrollapp.png
 )
 
 set_target_properties(mint-server PROPERTIES

@@ -15,8 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 4.0.0)
-project(Mint-C VERSION 2.0.0 LANGUAGES CXX)
+project(Mint-C VERSION 2.1.0 LANGUAGES CXX)
 set(PROJECT_VERSION_SUFFIX "")
+
+if(APPLE)
+    message(FATAL_ERROR "macOS is not supported by this project.")
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -49,6 +53,11 @@ FetchContent_Declare(stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
     GIT_TAG master)
 FetchContent_MakeAvailable(stb)
+
+FetchContent_Declare(webview
+    GIT_REPOSITORY https://github.com/webview/webview.git
+    GIT_TAG 0.12.0 )
+FetchContent_MakeAvailable(webview)
 
 find_package(OpenMP REQUIRED)
 

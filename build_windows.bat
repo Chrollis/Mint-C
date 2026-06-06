@@ -22,6 +22,28 @@ echo  MINT-C Build Script (Windows)
 echo ========================================
 
 echo.
+echo [0/3] Checking WebView2 Runtime...
+
+reg query "HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" >nul 2>&1
+if %errorlevel% equ 0 (
+    echo WebView2 Runtime is installed.
+) else (
+    echo.
+    echo ==========================================
+    echo  WARNING: WebView2 Runtime not found!
+    echo  The application will not run without it.
+    echo  Please download and install from:
+    echo  https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+    echo ==========================================
+    echo.
+    set /p choice="Do you want to continue building anyway? (y/N): "
+    if /i not "!choice!"=="y" (
+        echo Build cancelled.
+        exit /b 1
+    )
+)
+
+echo.
 echo [1/3] Building frontend...
 if not exist "node_modules" (
     echo Installing npm dependencies...
