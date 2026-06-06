@@ -11,7 +11,7 @@
 
 ## ✨ Features
 
-- 🖥️ **Pure Web Operation** – No desktop framework required, ready to use via browser
+- 🖥️ **Native Desktop App** – Built with system WebView, no external browser needed
 - ⚡ **High-Performance Inference** – C++ backend supports multi-digit recognition and automatic segmentation
 - 🧠 **Complete Training Pipeline** – Supports MNIST format datasets, real-time loss/accuracy monitoring
 - 📦 **Dataset Management** – Upload/download/merge IDX format datasets, save online drawn samples
@@ -26,6 +26,8 @@
 | Component    | Version / Notes                                  |
 | ------------ | ------------------------------------------------ |
 | OS           | Windows / Linux (supports 8-byte double)         |
+| Windows      | WebView2 Runtime (included in Windows 11)        |
+| Linux        | GTK+ 3, WebKitGTK‑4.0, and GDK‑PixBuf            |
 | C++ Compiler | C++23 or later (GCC 13+, Clang 16+, MSVC 19.35+) |
 | CMake        | ≥ 4.0.0                                          |
 | Git          | Any version                                      |
@@ -40,8 +42,8 @@
    - **Linux**: `chmod +x build_linux.sh`, `./build_linux.sh`
    - All C++ dependencies (Eigen5, cpp-httplib, nlohmann/json, stb) are automatically downloaded via CMake `FetchContent`.
 
-3. **Start the server** `./build/bin/Release/mint-server` (Windows: `mint-server.exe`)
-4. **Open your browser** and go to [http://127.0.0.1:3705](http://127.0.0.1:3705)
+3. **Run the application** – Execute `./build/bin/Release/mint-server` (Linux) or `mint-server.exe` (Windows)
+4. **Use the built‑in window** – The GUI will open automatically; no manual browser navigation is required.
 
 ## 🧱 Technical Architecture
 
@@ -52,6 +54,7 @@
 - **Image Processing**: stb_image (PNG decoding)
 - **Serialization**: Binary stream + nlohmann/json
 - **Parallelism**: OpenMP (training acceleration)
+- **GUI Integration**: Native WebView (webview library)
 
 ### Frontend (Vue 3)
 
@@ -148,7 +151,7 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
 
 ## ✨ 特性
 
-- 🖥️ **纯 Web 操作** – 无需安装桌面框架，浏览器访问即用
+- 🖥️ **原生桌面应用** – 基于系统 WebView，无需外部浏览器
 - ⚡ **高性能推理** – 后端 C++ 实现，支持多数字同时识别与自动分割
 - 🧠 **完整训练流水线** – 支持 MNIST 格式数据集，实时监控损失/准确率
 - 📦 **数据集管理** – 上传/下载/合并 IDX 格式数据集，支持在线绘制样本保存
@@ -163,6 +166,8 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
 | 组件       | 版本/要求                                      |
 | ---------- | ---------------------------------------------- |
 | 操作系统   | Windows / Linux (支持 8 字节 double)           |
+| Windows    | WebView2 运行时 (Windows 11 已内置)            |
+| Linux      | 需要 GTK+ 3、WebKitGTK‑4.0 和 GDK‑PixBuf       |
 | C++ 编译器 | C++23 及以上 (GCC 13+, Clang 16+, MSVC 19.35+) |
 | CMake      | ≥ 4.0.0                                        |
 | Git        | 任意版本                                       |
@@ -177,9 +182,9 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
    - **Linux**: `chmod +x build_linux.sh`, `./build_linux.sh`
    - 所有 C++ 依赖 (Eigen5, cpp-httplib, nlohmann/json, stb) 会通过 CMake `FetchContent` 自动下载。
 
-3. **启动服务** `./build/bin/Release/mint-server` (Windows 下为 `mint-server.exe`)
+3. **运行程序** – 执行 `./build/bin/Release/mint-server` (Linux) 或 `mint-server.exe` (Windows)
 
-4. **打开浏览器** 访问 [http://127.0.0.1:3705](http://127.0.0.1:3705)
+4. **使用内置窗口** – GUI 会自动弹出，无需手动打开浏览器。
 
 ## 🧱 技术架构
 
@@ -190,6 +195,7 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
 - **图像处理**: stb_image (PNG 解码)
 - **序列化**: 二进制流 + nlohmann/json
 - **并行**: OpenMP (训练加速)
+- **GUI 集成**：原生 WebView (webview 库)
 
 ### 前端 (Vue 3)
 
