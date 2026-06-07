@@ -1,6 +1,6 @@
 {
   "name": "mint-webui",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "engines": {
     "node": ">=24.0.0"
   },

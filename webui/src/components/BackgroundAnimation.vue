@@ -1,21 +1,3 @@
-<!--
-  Mint-C - Web-based digit recognition tool with C++ CNN backend
-  Copyright (C) 2026 Chrollis
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 <template>
   <canvas ref="canvasRef" class="bg-canvas"></canvas>
 </template>
@@ -28,14 +10,15 @@ const props = defineProps({
 });
 
 const canvasRef = ref(null);
-
 let ctx = null;
-
 let animationId = null;
-
 let particles = [];
-
 let resizeTimeout;
+
+let cachedLayout = [];
+let cachedFontSize = 0;
+let cachedCanvasWidth = 0;
+let cachedCanvasHeight = 0;
 
 const asciiArt = String.raw`
 __/\\\\____________/\\\\________________________________________________________/\\\\\\\\\_
@@ -49,14 +32,10 @@ __/\\\\____________/\\\\________________________________________________________
         _\///______________\///__\///__\///____\///______\/////________________________\/////////__
 `;
 
-const asciiLines = asciiArt
-  .split("\n")
-  .filter((line) => line.trim().length > 0);
+const asciiLines = asciiArt.split("\n").filter(line => line.trim().length > 0);
 
 let currentAsciiFontSize = 16;
-
 let targetAsciiFontSize = 16;
-
 const ASCII_BASE_FONT_SIZE = 16;
 const ASCII_HOVER_FONT_SIZE = 24;
 const WAVE_AMPLITUDE = 2;
@@ -123,13 +102,14 @@ class Particle {
   }
 
   draw(ctx, color) {
+    const gradient = ctx.createRadialGradient(this.x, this.y, this.size * 0.2, this.x, this.y, this.size);
+    gradient.addColorStop(0, color + "A0");
+    gradient.addColorStop(1, color + "20");
+
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = color + "80";
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = color + "50";
+    ctx.fillStyle = gradient;
     ctx.fill();
-    ctx.shadowBlur = 0;
   }
 }
 
@@ -138,6 +118,44 @@ function initParticles(width, height) {
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     particles.push(new Particle(width, height));
   }
+}
+
+function buildAsciiLayout(fontSize, canvasWidth, canvasHeight) {
+  if (!ctx) return [];
+  const fontFamily = '"Fira Code", "LXGW WenKai Mono Screen", monospace';
+  ctx.save();
+  ctx.font = `${fontSize}px ${fontFamily}`;
+  const lineHeight = fontSize * 1.2;
+  const totalHeight = asciiLines.length * lineHeight;
+  const startY = (canvasHeight - totalHeight) / 2;
+  const layout = [];
+
+  for (let lineIdx = 0; lineIdx < asciiLines.length; lineIdx++) {
+    const line = asciiLines[lineIdx];
+    const chars = line.split('');
+    let charWidths = [];
+    let totalWidth = 0;
+    for (let i = 0; i < chars.length; i++) {
+      const w = ctx.measureText(chars[i]).width;
+      charWidths.push(w);
+      totalWidth += w;
+    }
+    let startX = (canvasWidth - totalWidth) / 2;
+    let currentX = startX;
+    const baseY = startY + lineIdx * lineHeight;
+
+    for (let i = 0; i < chars.length; i++) {
+      layout.push({
+        char: chars[i],
+        x: currentX,
+        baseY: baseY,
+        width: charWidths[i]
+      });
+      currentX += charWidths[i];
+    }
+  }
+  ctx.restore();
+  return layout;
 }
 
 function resizeCanvas() {
@@ -152,59 +170,43 @@ function handleResize() {
   if (resizeTimeout) clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
     if (!canvasRef.value) return;
-    const canvas = canvasRef.value;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    if (ctx) initParticles(canvas.width, canvas.height);
+    resizeCanvas();
+    cachedLayout = [];
+    cachedFontSize = 0;
   }, 150);
 }
 
 function drawAsciiArt() {
-  if (!ctx) return;
-  const w = canvasRef.value.width;
-  const h = canvasRef.value.height;
+  if (!ctx || !canvasRef.value) return;
+  const canvas = canvasRef.value;
+  const w = canvas.width;
+  const h = canvas.height;
 
-  currentAsciiFontSize =
-    currentAsciiFontSize * 0.92 + targetAsciiFontSize * 0.08;
+  currentAsciiFontSize = currentAsciiFontSize * 0.92 + targetAsciiFontSize * 0.08;
   const fontSize = Math.round(currentAsciiFontSize);
-  const fontFamily = '"Fira Code", "LXGW WenKai Mono Screen", monospace';
+
+  if (cachedLayout.length === 0 || cachedFontSize !== fontSize || cachedCanvasWidth !== w || cachedCanvasHeight !== h) {
+    cachedLayout = buildAsciiLayout(fontSize, w, h);
+    cachedFontSize = fontSize;
+    cachedCanvasWidth = w;
+    cachedCanvasHeight = h;
+  }
+
   ctx.save();
+  const fontFamily = '"Fira Code", "LXGW WenKai Mono Screen", monospace';
   ctx.font = `${fontSize}px ${fontFamily}`;
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.fillStyle = props.color + "80";
   ctx.shadowBlur = 0;
 
-  const lineHeight = fontSize * 1.2;
-  const totalHeight = asciiLines.length * lineHeight;
-  let startY = (h - totalHeight) / 2;
-
   const now = Date.now() / 1000;
   const amplitude = WAVE_AMPLITUDE;
 
-  for (let lineIdx = 0; lineIdx < asciiLines.length; lineIdx++) {
-    const line = asciiLines[lineIdx];
-    const chars = line.split("");
-    let totalWidth = 0;
-    const charWidths = [];
-    for (let i = 0; i < chars.length; i++) {
-      const metrics = ctx.measureText(chars[i]);
-      charWidths.push(metrics.width);
-      totalWidth += metrics.width;
-    }
-    let startX = (w - totalWidth) / 2;
-    let currentX = startX;
-    const baseY = startY + lineIdx * lineHeight;
-
-    for (let i = 0; i < chars.length; i++) {
-      const char = chars[i];
-      const phase = i * 0.3 + now * WAVE_FREQUENCY;
-      const offsetY = Math.sin(phase) * amplitude;
-      const x = currentX;
-      const y = baseY + offsetY;
-      ctx.fillText(char, x, y);
-      currentX += charWidths[i];
-    }
+  for (const info of cachedLayout) {
+    const phase = (info.x * 0.02) + now * WAVE_FREQUENCY;
+    const offsetY = Math.sin(phase) * amplitude;
+    ctx.fillText(info.char, info.x, info.baseY + offsetY);
   }
   ctx.restore();
 }
@@ -218,10 +220,8 @@ function animate() {
 
   drawAsciiArt();
 
-  const targetX = null;
-  const targetY = null;
   for (let p of particles) {
-    p.update(targetX, targetY, width, height);
+    p.update(null, null, width, height);
     p.draw(ctx, props.color);
   }
 

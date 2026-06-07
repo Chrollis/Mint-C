@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 4.0.0)
-project(Mint-C VERSION 2.1.0 LANGUAGES CXX)
+project(Mint-C VERSION 2.1.1 LANGUAGES CXX)
 set(PROJECT_VERSION_SUFFIX "")
 
 if(APPLE)
