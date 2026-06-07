@@ -195,6 +195,21 @@ function activateSplash() {
   window.location.reload();
 }
 
+function toggleFullscreen() {
+  if (window.toggle_fullscreen) {
+    window.toggle_fullscreen('', () => { });
+  } else {
+    console.warn('toggle_fullscreen not available');
+  }
+}
+
+function handleKeydown(event) {
+  if (event.key === 'F11') {
+    event.preventDefault();
+    toggleFullscreen();
+  }
+}
+
 onMounted(async () => {
   const savedTheme = localStorage.getItem("mint-theme");
   if (savedTheme === "green" || savedTheme === "blue") {
@@ -213,10 +228,12 @@ onMounted(async () => {
   latestLogInterval = setInterval(() => {
     logStore.fetchLatestLog();
   }, 5000);
+  window.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
   if (latestLogInterval) clearInterval(latestLogInterval);
+  window.removeEventListener('keydown', handleKeydown);
 });
 </script>
 
