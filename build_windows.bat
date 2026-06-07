@@ -15,7 +15,7 @@ REM
 REM You should have received a copy of the GNU General Public License
 REM along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-setlocal
+setlocal enabledelayedexpansion
 
 echo ========================================
 echo  MINT-C Build Script (Windows)
@@ -83,17 +83,23 @@ cd ..
 echo.
 set /p choice="Do you want to copy the Release build output to the current directory? (y/N): "
 if /i "%choice%"=="y" (
-    if exist "build\bin\Release" (
-        echo Copying build\bin\Release\ to .\Release\ ...
-        if exist "Release" (
-            echo Removing existing .\Release\ folder...
-            rmdir /s /q Release 2>nul
-        )
-        xcopy /E /I /H /Y build\bin\Release Release
-        echo Done. Output is in .\Release\
+    set "SRC_DIR="
+    if exist "build\bin\Release\mint-server.exe" (
+        set "SRC_DIR=build\bin\Release"
+    ) else if exist "build\bin\mint-server.exe" (
+        set "SRC_DIR=build\bin"
     ) else (
-        echo Warning: build\bin\Release\ not found. Check your build output location.
+        echo Error: Could not find mint-server.exe in build\bin\ or build\bin\Release\
+        exit /b 1
     )
+    echo Copying !SRC_DIR!\ to .\Mint-C\ ...
+    if exist "Mint-C" (
+        echo Removing existing .\Mint-C\ folder...
+        rmdir /s /q Mint-C 2>nul
+    )
+    mkdir Mint-C
+    xcopy /E /I /H /Y "!SRC_DIR!" Mint-C
+    echo Done. Output is in .\Mint-C\
 ) else (
     echo Skipping copy.
 )

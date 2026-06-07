@@ -27,7 +27,7 @@
 | ------------ | ------------------------------------------------ |
 | OS           | Windows / Linux (supports 8-byte double)         |
 | Windows      | WebView2 Runtime (included in Windows 11)        |
-| Linux        | GTK+ 3, WebKitGTK‑4.0, and GDK‑PixBuf            |
+| Linux        | GTK+ 3, WebKitGTK‑4.1, and GDK‑PixBuf            |
 | C++ Compiler | C++23 or later (GCC 13+, Clang 16+, MSVC 19.35+) |
 | CMake        | ≥ 4.0.0                                          |
 | Git          | Any version                                      |
@@ -42,7 +42,10 @@
    - **Linux**: `chmod +x build_linux.sh`, `./build_linux.sh`
    - All C++ dependencies (Eigen5, cpp-httplib, nlohmann/json, stb) are automatically downloaded via CMake `FetchContent`.
 
-3. **Run the application** – Execute `./build/bin/Release/mint-server` (Linux) or `mint-server.exe` (Windows)
+3. **Run the application** – After a successful build, you can run:
+   - **From the copied output**: `./Mint-C/mint-server` (Linux) or `Mint-C\mint-server.exe` (Windows)
+   - **Directly from the build tree**: `./build/bin/mint-server` (Linux) or `build\bin\Release\mint-server.exe` (MSVC on Windows)
+
 4. **Use the built‑in window** – The GUI will open automatically; no manual browser navigation is required.
 
 ## 🧱 Technical Architecture
@@ -167,7 +170,7 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
 | ---------- | ---------------------------------------------- |
 | 操作系统   | Windows / Linux (支持 8 字节 double)           |
 | Windows    | WebView2 运行时 (Windows 11 已内置)            |
-| Linux      | 需要 GTK+ 3、WebKitGTK‑4.0 和 GDK‑PixBuf       |
+| Linux      | 需要 GTK+ 3、WebKitGTK‑4.1 和 GDK‑PixBuf       |
 | C++ 编译器 | C++23 及以上 (GCC 13+, Clang 16+, MSVC 19.35+) |
 | CMake      | ≥ 4.0.0                                        |
 | Git        | 任意版本                                       |
@@ -182,7 +185,9 @@ This project is open-sourced under the [GNU General Public License v3.0](https:/
    - **Linux**: `chmod +x build_linux.sh`, `./build_linux.sh`
    - 所有 C++ 依赖 (Eigen5, cpp-httplib, nlohmann/json, stb) 会通过 CMake `FetchContent` 自动下载。
 
-3. **运行程序** – 执行 `./build/bin/Release/mint-server` (Linux) 或 `mint-server.exe` (Windows)
+3. **运行程序** – 构建成功后，可以通过以下方式运行：
+   - **从拷贝的输出目录**：`./Mint-C/mint-server` (Linux) 或 `Mint-C\mint-server.exe` (Windows)
+   - **直接从构建目录**：`./build/bin/mint-server` (Linux) 或 `build\bin\Release\mint-server.exe` (MSVC Windows)
 
 4. **使用内置窗口** – GUI 会自动弹出，无需手动打开浏览器。
 

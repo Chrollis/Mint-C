@@ -17,6 +17,9 @@
 #include <httplib.h>
 #include <omp.h>
 #include <webview/webview.h>
+#ifdef Success
+#undef Success
+#endif
 #include <Eigen/Dense>
 
 #include <atomic>
@@ -136,7 +139,7 @@ __/\\\\____________/\\\\________________________________________________________
     }
 #else
     auto window_result = w.window();
-    if (window_result) {
+    if (window_result.has_value()) {
         GtkWidget* window = static_cast<GtkWidget*>(window_result.value());
         if (window && GTK_IS_WINDOW(window)) {
             GdkPixbuf* icon = gdk_pixbuf_new_from_file("./chrollapp.png", NULL);
@@ -265,7 +268,7 @@ void OnToggleFullscreen(
     const std::string& seq, const std::string& req, void* arg) {
     webview::webview* w = static_cast<webview::webview*>(arg);
     auto window_res = w->window();
-    if (window_res) {
+    if (window_res.has_value()) {
         GtkWidget* window = static_cast<GtkWidget*>(window_res.value());
         if (window && GTK_IS_WINDOW(window)) {
             ToggleFullscreenLinux(window, g_fs_is_fullscreen);
